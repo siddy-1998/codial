@@ -16,13 +16,13 @@ module.exports.home = function(req,res)
     // });
 
 
- //populate the user of each post
+ //populate the user of each post and populate user inside comments of each post
      Post.find({})
      .populate('user')
      .populate({
           path : 'comments',
           populate : {
-               path : 'user'
+               path : 'user'                      
           }
      })
      .exec(function(err,posts){
