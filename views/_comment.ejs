@@ -1,0 +1,19 @@
+ <li>
+     <p>
+         <% if(locals.user && (locals.user.id == comment.user.id || post.user.id==locals.user.id)){%>
+         <!-- if comment belongs to the one who is logged in  OR  post belongs to the one whose logged in -->
+         <small>
+             <a href="/comments/destroy/<%= comment.id %>">X</a>
+         </small>
+
+         <%}%>
+
+                                   <%= comment.content %>
+         <br>
+         <small>
+             <%= comment.user.name %>
+         </small>
+
+     </p>
+
+ </li>
