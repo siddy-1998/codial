@@ -17,19 +17,31 @@ module.exports.create = function(req,res){
 
 }
 
-module.exports.destroy = function(req,res){
+module.exports.destroy = async function(req,res){
 
-    Post.findById(req.params.id,function(err,post){
+
+    try{
+
+        let post = await Post.findById(req.params.id);
         //.id means converting the object _id to string
-        if(post.user == req.user.id){
+        if (post.user == req.user.id) {
             post.remove();
 
-            Comment.deleteMany({post : req.params.id},function(err){
-                return res.redirect('back');
+            await Comment.deleteMany({
+                post: req.params.id
             });
-        
-        }else{
+
+            return res.redirect('back');
+
+        } else {
             return res.redirect('back');
         }
-    });
+
+    } catch (err) {
+        console.log('Error', err);
+        return;
+    }
+
+    
+    
 }
