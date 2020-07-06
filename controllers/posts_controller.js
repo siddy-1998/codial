@@ -8,10 +8,13 @@ module.exports.create = function(req,res){
         user : req.user._id
     },function(err,post){
         if(err){
-            console.log('error in creating a post');
-            return;
+            //console.log('error in creating a post');
+        req.flash('error', err);
+         return res.redirect('back');
+
         }
 
+        req.flash('success','Post published!');
         return res.redirect('back');
     });
 
@@ -30,16 +33,20 @@ module.exports.destroy = async function(req,res){
             await Comment.deleteMany({
                 post: req.params.id
             });
-
+            
+            req.flash('success','Post and associated comments deleted!')
             return res.redirect('back');
 
         } else {
+         req.flash('error', 'Unauthorized');
+
             return res.redirect('back');
         }
 
     } catch (err) {
-        console.log('Error', err);
-        return;
+        //console.log('Error', err);
+         req.flash('error', err);
+          return res.redirect('back');
     }
 
     

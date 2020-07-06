@@ -19,6 +19,7 @@ module.exports.update = function(req,res){
     if(req.user.id == req.params.id){
 
         User.findByIdAndUpdate(req.params.id,req.body,function(err,user){
+            req.flash('success','Name/Email updated successfully!');
             return res.redirect('back');
         });
     }else{
@@ -56,24 +57,37 @@ module.exports.signIn = function (req, res) {
 module.exports.create = function(req,res)
 {
     if(req.body.password != req.body.confirm_password){
+        res.flash('error','Entered password do not match');
         return res.redirect('back');
     }
 
     User.findOne({ email : req.body.email },function(err,user){
         
-        if(err){console.log('error in finding user in signing up'); return;}
+        if(err){
+            //console.log('error in finding user in signing up');
+            req.flash('error', err);
+             return res.redirect('back');
+            }
 
         if(!user){
             //new user , then create user and redirect to sign in page
            User.create(req.body,function(err,user){
              
-            if (err) {  console.log('error in finding user in signing up');  return; }
+            if (err) {  
+                //console.log('error in finding user in signing up'); 
+                 req.flash('error', err);
+                return res.redirect('back');
+            }
+
+            req.flash('success','User successfully created');
             
             return res.redirect('/users/sign-in');
 
            });
         }else{
             //if user already exist redirect to same page i.e sign up page
+
+            req.flash('error','User already exists');
             return res.redirect('back');
         }
     });
